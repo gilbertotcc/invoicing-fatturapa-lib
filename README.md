@@ -4,6 +4,10 @@ Java library which maps electronic invoices defined according to _FatturaPA_ for
 [FatturaPA documentation](https://www.fatturapa.gov.it/export/fatturazione/en/normativa/f-2.htm?l=en). The library provides some basic operations on
 electronic invoices and their XML representation.
 
+## Usage
+
+TODO ...
+
 ## FatturaPA supported format
 
 The library supports version 1.2.1 of FatturaPA format.
