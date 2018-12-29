@@ -113,6 +113,7 @@
           <effort>Max</effort>
           <threshold>Low</threshold>
           <xmlOutput>true</xmlOutput>
+          <onlyAnalyze>com.github.gilbertotcc.invoicing.*</onlyAnalyze>
         </configuration>
         <executions>
           <execution>
