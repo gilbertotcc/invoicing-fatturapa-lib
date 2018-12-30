@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <lombok.version>1.18.4</lombok.version>
         <jaxb2MavenPlugin.version>2.4</jaxb2MavenPlugin.version>
         <junit.version>4.12</junit.version>
         <skipITs>true</skipITs>
@@ -22,7 +23,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.4</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

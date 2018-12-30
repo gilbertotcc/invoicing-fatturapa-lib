@@ -7,7 +7,8 @@ public class FatturaElettronicaTypeToInvoiceConverter implements Converter<Fattu
 
     @Override
     public Invoice convert(final FatturaElettronicaType object) {
-        // TODO
-        return null;
+        return Invoice.builder()
+                .fatturaElettronicaType(object)
+                .build();
     }
 }
