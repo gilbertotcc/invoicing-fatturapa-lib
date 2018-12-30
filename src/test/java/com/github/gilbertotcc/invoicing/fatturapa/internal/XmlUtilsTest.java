@@ -3,6 +3,7 @@ package com.github.gilbertotcc.invoicing.fatturapa.internal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import it.gov.fatturapa.DatiTrasmissioneType;
 import it.gov.fatturapa.FatturaElettronicaType;
 import it.gov.fatturapa.FormatoTrasmissioneType;
 import it.gov.fatturapa.RegimeFiscaleType;
+import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +30,7 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPA01FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPA01FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPA01.xml"));
 
@@ -70,7 +72,7 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPA02FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPA02FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPA02.xml"));
 
@@ -80,7 +82,7 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPA03FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPA03FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPA03.xml"));
 
@@ -90,7 +92,7 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPR01FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPR01FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPR01.xml"));
 
@@ -100,7 +102,7 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPR02FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPR02FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPR02.xml"));
 
@@ -110,12 +112,29 @@ public class XmlUtilsTest {
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPR03FromFileShouldSuccess() throws IOException {
+    public void loadFatturaElettronicaTypeIT01234567890_FPR03FromFileShouldSuccess() throws IOException {
         FatturaElettronicaType fatturaElettronicaType =
                 xmlUtils.loadIFatturaElettronicaTypeFrom(new File(INVOICES_PATH + "IT01234567890_FPR03.xml"));
 
         assertNotNull(fatturaElettronicaType);
 
         // TODO Add asserts
+    }
+
+    @Test
+    public void saveFatturaElettronicaTypeToFileShouldSuccess() throws IOException {
+        FatturaElettronicaType fatturaElettronicaType = new FatturaElettronicaType();
+        fatturaElettronicaType.setVersione(FormatoTrasmissioneType.FPA_12);
+
+        File temporaryFile = temporaryFile();
+        xmlUtils.saveFatturaElettronicaTypeTo(fatturaElettronicaType, temporaryFile);
+
+        assertTrue(FileUtils.contentEquals(new File(INVOICES_PATH + "expected_generated_invoice_00.xml"), temporaryFile));
+    }
+
+    private static File temporaryFile() throws IOException {
+        File file = File.createTempFile("XmlUtilsTest-", null);
+        file.deleteOnExit();
+        return file;
     }
 }
