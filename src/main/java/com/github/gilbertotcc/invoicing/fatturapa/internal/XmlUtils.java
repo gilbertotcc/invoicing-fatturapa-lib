@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import it.gov.fatturapa.FatturaElettronicaType;
+import it.gov.fatturapa.ObjectFactory;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -43,7 +45,9 @@ public class XmlUtils {
     public void saveFatturaElettronicaTypeTo(final FatturaElettronicaType fatturaElettronicaType, final File file) throws IOException {
         try {
             log.trace("Save XML to file {}", file.getAbsolutePath());
-            marshaller.marshal(fatturaElettronicaType, file);
+            JAXBElement<FatturaElettronicaType> fatturaElettronicaTypeJAXBElement = new ObjectFactory()
+                    .createFatturaElettronica(fatturaElettronicaType);
+            marshaller.marshal(fatturaElettronicaTypeJAXBElement, file);
         } catch (JAXBException e) {
             throw new IOException(format("Cannot save XML to file '%s'", file.getAbsolutePath()), e);
         }
