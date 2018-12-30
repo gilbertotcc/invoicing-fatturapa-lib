@@ -1,114 +1,68 @@
 package com.github.gilbertotcc.invoicing.fatturapa.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
 
 import com.github.gilbertotcc.invoicing.fatturapa.Invoice;
-import it.gov.fatturapa.CedentePrestatoreType;
-import it.gov.fatturapa.CessionarioCommittenteType;
-import it.gov.fatturapa.DatiTrasmissioneType;
+import com.github.gilbertotcc.invoicing.fatturapa.internal.FatturaElettronicaTypeToInvoiceConverter;
+import com.github.gilbertotcc.invoicing.fatturapa.internal.InvoiceToFatturaElettronicaTypeConverter;
+import com.github.gilbertotcc.invoicing.fatturapa.internal.XmlUtils;
 import it.gov.fatturapa.FatturaElettronicaType;
-import it.gov.fatturapa.FormatoTrasmissioneType;
-import it.gov.fatturapa.RegimeFiscaleType;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class IOUtilsTest {
 
-    private static final String INVOICES_PATH = "src/test/resources/invoice_examples/";
+    @Mock
+    private FatturaElettronicaTypeToInvoiceConverter fatturaElettronicaTypeToInvoiceConverter;
+
+    @Mock
+    private InvoiceToFatturaElettronicaTypeConverter invoiceToFatturaElettronicaTypeConverter;
+
+    @Mock
+    private XmlUtils xmlUtils;
 
     @Test
-    public void loadInvoiceIT01234567890_FPA01FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPA01.xml"));
+    public void verifyLoadInvoiceFromFile() throws IOException {
+        IOUtils ioUtils = new IOUtils(fatturaElettronicaTypeToInvoiceConverter, invoiceToFatturaElettronicaTypeConverter, xmlUtils);
 
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
+        File file = temporaryFile();
+        ioUtils.loadInvoiceFrom(file);
 
-        assertEquals(FormatoTrasmissioneType.FPA_12, fatturaElettronicaType.getVersione());
-
-        DatiTrasmissioneType datiTrasmissioneType = fatturaElettronicaType.getFatturaElettronicaHeader().getDatiTrasmissione();
-        assertEquals("IT", datiTrasmissioneType.getIdTrasmittente().getIdPaese());
-        assertEquals("01234567890", datiTrasmissioneType.getIdTrasmittente().getIdCodice());
-        assertEquals("00001", datiTrasmissioneType.getProgressivoInvio());
-        assertEquals(FormatoTrasmissioneType.FPA_12, datiTrasmissioneType.getFormatoTrasmissione());
-        assertEquals("AAAAAA", datiTrasmissioneType.getCodiceDestinatario());
-
-        CedentePrestatoreType cedentePrestatoreType = fatturaElettronicaType.getFatturaElettronicaHeader().getCedentePrestatore();
-        assertEquals("IT", cedentePrestatoreType.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese());
-        assertEquals("01234567890", cedentePrestatoreType.getDatiAnagrafici().getIdFiscaleIVA().getIdCodice());
-        assertEquals("ALPHA SRL", cedentePrestatoreType.getDatiAnagrafici().getAnagrafica().getDenominazione());
-        assertEquals("IT", cedentePrestatoreType.getDatiAnagrafici().getIdFiscaleIVA().getIdPaese());
-        assertEquals(RegimeFiscaleType.RF_19, cedentePrestatoreType.getDatiAnagrafici().getRegimeFiscale());
-        assertEquals("VIALE ROMA 543", cedentePrestatoreType.getSede().getIndirizzo());
-        assertEquals("07100", cedentePrestatoreType.getSede().getCAP());
-        assertEquals("SASSARI", cedentePrestatoreType.getSede().getComune());
-        assertEquals("SS", cedentePrestatoreType.getSede().getProvincia());
-        assertEquals("IT", cedentePrestatoreType.getSede().getNazione());
-
-        CessionarioCommittenteType cessionarioCommittenteType = fatturaElettronicaType.getFatturaElettronicaHeader().getCessionarioCommittente();
-        assertEquals("09876543210", cessionarioCommittenteType.getDatiAnagrafici().getCodiceFiscale());
-        assertEquals("AMMINISTRAZIONE BETA", cessionarioCommittenteType.getDatiAnagrafici().getAnagrafica().getDenominazione());
-        assertEquals("VIA TORINO 38-B", cessionarioCommittenteType.getSede().getIndirizzo());
-        assertEquals("00145", cessionarioCommittenteType.getSede().getCAP());
-        assertEquals("ROMA", cessionarioCommittenteType.getSede().getComune());
-        assertEquals("RM", cessionarioCommittenteType.getSede().getProvincia());
-        assertEquals("IT", cessionarioCommittenteType.getSede().getNazione());
-
-        // TODO Add asserts for body
-
-        assertNull(fatturaElettronicaType.getSignature());
+        verify(xmlUtils, times(1)).loadIFatturaElettronicaTypeFrom(eq(file));
+        verify(fatturaElettronicaTypeToInvoiceConverter, times(1))
+                .convert(any(FatturaElettronicaType.class));
     }
 
     @Test
-    public void loadInvoiceIT01234567890_FPA02FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPA02.xml"));
+    public void verifySaveInvoiceToFile() throws IOException {
+        IOUtils ioUtils = new IOUtils(fatturaElettronicaTypeToInvoiceConverter, invoiceToFatturaElettronicaTypeConverter, xmlUtils);
 
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
+        Invoice invoice = randomInvoice();
+        ioUtils.saveInvoiceTo(invoice, temporaryFile());
 
-        // TODO Add asserts
+        verify(invoiceToFatturaElettronicaTypeConverter, times(1)).convert(eq(invoice));
+        verify(xmlUtils, times(1))
+                .saveFatturaElettronicaTypeTo(any(FatturaElettronicaType.class), any(File.class));
     }
 
-    @Test
-    public void loadInvoiceIT01234567890_FPA03FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPA03.xml"));
-
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
-
-        // TODO Add asserts
+    private static File temporaryFile() throws IOException {
+        File temporaryFile = File.createTempFile("IOUtilsTest-", null);
+        temporaryFile.deleteOnExit();
+        return temporaryFile;
     }
 
-    @Test
-    public void loadInvoiceIT01234567890_FPR01FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPR01.xml"));
-
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
-
-        // TODO Add asserts
-    }
-
-    @Test
-    public void loadInvoiceIT01234567890_FPR02FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPR02.xml"));
-
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
-
-        // TODO Add asserts
-    }
-
-    @Test
-    public void loadInvoiceIT01234567890_FPR03FromFileShouldSuccess() throws IOException {
-        Invoice invoice = IOUtils.loadInvoiceFrom(new File(INVOICES_PATH + "IT01234567890_FPR03.xml"));
-
-        FatturaElettronicaType fatturaElettronicaType = invoice.getFatturaElettronicaType();
-        assertNotNull(fatturaElettronicaType);
-
-        // TODO Add asserts
+    private static Invoice randomInvoice() {
+        return Invoice
+                .builder()
+                .build();
     }
 }
