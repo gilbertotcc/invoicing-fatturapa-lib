@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+          xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          version="2.0">
+    <globalBindings>
+        <xjc:javaType name="java.time.ZonedDateTime" xmlType="xsd:dateTime" adapter="com.migesok.jaxb.adapter.javatime.ZonedDateTimeXmlAdapter"/>
+        <xjc:javaType name="java.time.LocalDate" xmlType="xsd:date" adapter="com.migesok.jaxb.adapter.javatime.LocalDateXmlAdapter"/>
+    </globalBindings>
+</bindings>
