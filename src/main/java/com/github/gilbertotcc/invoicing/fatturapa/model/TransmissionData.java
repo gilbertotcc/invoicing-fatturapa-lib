@@ -11,7 +11,7 @@ public class TransmissionData {
 
     private String documentId;
 
-    // FIXME Add type "Pubblica Amministrazione" or "Privato"
+    private InvoiceFormat invoiceFormat;
 
     private RecipientCode recipientCode;
 

@@ -4,7 +4,6 @@ import static com.github.gilbertotcc.invoicing.fatturapa.model.RecipientCode.pub
 import static org.junit.Assert.assertEquals;
 
 import com.github.gilbertotcc.invoicing.fatturapa.Invoice;
-import com.github.gilbertotcc.invoicing.fatturapa.internal.DatiTrasmissioneTypeFactory;
 import com.github.gilbertotcc.invoicing.fatturapa.model.TransmissionData;
 import static com.github.gilbertotcc.invoicing.fatturapa.model.UserFiscalId.userFiscalId;
 import it.gov.fatturapa.DatiTrasmissioneType;
