@@ -1,12 +1,21 @@
 # FatturaPA library
 
-Java library which maps electronic invoices defined according to _FatturaPA_ format as defined at
-[FatturaPA documentation](https://www.fatturapa.gov.it/export/fatturazione/en/normativa/f-2.htm?l=en). The library provides some basic operations on
-electronic invoices and their XML representation.
+_FatturaPA_ library is a Java library that provides methods to load, create, and save electronic invoices which fulfil the _FatturaPA_ format,
+the Italian standard for electronically invoicing (a.k.a. _Fatturazione elettronica_).
+
+Below, the main purposes this library aim at.
+
+- Design a clean and concise model to represents invoices, while ensuring compatibility with at least one version of FatturaPA format.
+- Provide methods for loading/storing invoices from/to file in FatturaPA format.
+- Support non-Italian readers in working with Italian electronically invoicing (at least the invoice model). Indeed existing documentation might not
+  suffice.
+
+More information about electronically invoicing and the FatturaPA format can be found at
+[FatturaPA documentation](https://www.fatturapa.gov.it/export/fatturazione/en/normativa/f-2.htm?l=en).
 
 ## Usage
 
-TODO ...
+_TODO ...._
 
 ## FatturaPA supported format
 
@@ -38,4 +47,4 @@ English documentation is available for FatturaPA version 1.1 at
 Version 1.2.1 added some new fields and updated some types as described in
 [Elenco modifiche al tracciato FatturaPA](https://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/changelog_formato.pdf) (in IT language
 only).
-  
+
