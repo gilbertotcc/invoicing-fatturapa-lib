@@ -1,5 +1,7 @@
 package com.github.gilbertotcc.invoicing.fatturapa.model;
 
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -27,11 +29,7 @@ public class Transferor {
 
     private Address permanentEstablishmentAddress;
 
-    private String phone;
-
-    private String fax;
-
-    private String email;
+    private List<Contact> contacts;
 
     private String administrationReference;
 }
