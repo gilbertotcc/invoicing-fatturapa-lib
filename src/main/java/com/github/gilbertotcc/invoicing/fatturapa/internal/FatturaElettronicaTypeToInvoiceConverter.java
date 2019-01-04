@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.Optional;
 
 import com.github.gilbertotcc.invoicing.fatturapa.Invoice;
+import com.github.gilbertotcc.invoicing.fatturapa.model.Contact;
 import com.github.gilbertotcc.invoicing.fatturapa.model.InvoiceFormat;
 import com.github.gilbertotcc.invoicing.fatturapa.model.TransmissionData;
 import com.github.gilbertotcc.invoicing.fatturapa.model.UserFiscalId;
@@ -32,10 +33,13 @@ public class FatturaElettronicaTypeToInvoiceConverter implements Converter<Fattu
         transmissionDataBuilder.recipientCode(datiTrasmissioneType::getCodiceDestinatario);
         Optional.ofNullable(datiTrasmissioneType.getContattiTrasmittente())
                 .ifPresent(contattiTrasmittenteType -> {
-                    transmissionDataBuilder.senderPhone(contattiTrasmittenteType.getTelefono());
-                    transmissionDataBuilder.senderEmail(contattiTrasmittenteType.getEmail());
+                    Optional.ofNullable(contattiTrasmittenteType.getTelefono())
+                            .ifPresent(phone -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.PHONE, phone)));
+                    Optional.ofNullable(contattiTrasmittenteType.getEmail())
+                            .ifPresent(email -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.EMAIL, email)));
                 });
-        transmissionDataBuilder.senderCertifiedEmail(datiTrasmissioneType.getPECDestinatario());
+        Optional.ofNullable(datiTrasmissioneType.getPECDestinatario())
+                .ifPresent(email -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.CERTIFIED_EMAIL, email)));
 
         return Invoice.builder()
                 .transmissionData(transmissionDataBuilder.build())

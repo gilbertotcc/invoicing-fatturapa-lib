@@ -1,9 +1,11 @@
 package com.github.gilbertotcc.invoicing.fatturapa.internal.xml;
 
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Optional;
 
 import com.github.gilbertotcc.invoicing.fatturapa.Invoice;
+import com.github.gilbertotcc.invoicing.fatturapa.model.Contact;
 import com.github.gilbertotcc.invoicing.fatturapa.model.InvoiceFormat;
 import com.github.gilbertotcc.invoicing.fatturapa.model.TransmissionData;
 import it.gov.fatturapa.ContattiTrasmittenteType;
@@ -38,13 +40,24 @@ public class DatiTrasmissioneTypeFactory implements XmlElementFactory<DatiTrasmi
         datiTrasmissioneType.setFormatoTrasmissione(formatoTrasmissioneType);
         datiTrasmissioneType.setCodiceDestinatario(transmissionData.getRecipientCode().recipientCode());
 
+        String senderPhone = firstContactValueByTypeIn(transmissionData.getSenderContacts(), Contact.Type.PHONE).orElse(null);
+        String senderEmail = firstContactValueByTypeIn(transmissionData.getSenderContacts(), Contact.Type.EMAIL).orElse(null);
+
         ContattiTrasmittenteType contattiTrasmittenteType = new ContattiTrasmittenteType();
-        contattiTrasmittenteType.setTelefono(transmissionData.getSenderPhone());
-        contattiTrasmittenteType.setEmail(transmissionData.getSenderEmail());
+        contattiTrasmittenteType.setTelefono(senderPhone);
+        contattiTrasmittenteType.setEmail(senderEmail);
         datiTrasmissioneType.setContattiTrasmittente(contattiTrasmittenteType);
 
-        datiTrasmissioneType.setPECDestinatario(transmissionData.getSenderCertifiedEmail());
+        String senderCertifiedEmail = firstContactValueByTypeIn(transmissionData.getSenderContacts(), Contact.Type.CERTIFIED_EMAIL).orElse(null);
+        datiTrasmissioneType.setPECDestinatario(senderCertifiedEmail);
 
         return datiTrasmissioneType;
+    }
+
+    private static Optional<String> firstContactValueByTypeIn(Collection<Contact> contacts, Contact.Type contactType) {
+        return contacts.stream()
+                .filter(contact -> contact.getType() == contactType)
+                .map(Contact::getValue)
+                .findFirst();
     }
 }

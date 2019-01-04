@@ -1,6 +1,9 @@
 package com.github.gilbertotcc.invoicing.fatturapa.model;
 
+import java.util.List;
+
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 
 @Value
@@ -15,9 +18,6 @@ public class TransmissionData {
 
     private RecipientCode recipientCode;
 
-    private String senderPhone;
-
-    private String senderEmail;
-
-    private String senderCertifiedEmail;
+    @Singular
+    private List<Contact> senderContacts;
 }

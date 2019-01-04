@@ -1,5 +1,7 @@
 package com.github.gilbertotcc.invoicing.fatturapa;
 
+import com.github.gilbertotcc.invoicing.fatturapa.model.Transferee;
+import com.github.gilbertotcc.invoicing.fatturapa.model.Transferor;
 import com.github.gilbertotcc.invoicing.fatturapa.model.TransmissionData;
 import it.gov.fatturapa.FatturaElettronicaType;
 
@@ -11,6 +13,10 @@ import lombok.Value;
 public class Invoice {
 
     private TransmissionData transmissionData;
+
+    private Transferor transferor;
+
+    private Transferee transferee;
 
     // TODO Very dummy FatturaPA is only a wrapper of FatturaElettronicaType
     private final FatturaElettronicaType fatturaElettronicaType;
