@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class Transferee {
+public class TransfereeDelegate {
 
     private UserFiscalId userFiscalId;
 
@@ -16,15 +16,4 @@ public class Transferee {
     private String firstName;
 
     private String lastName;
-
-    private String salutation;
-
-    private String eoriCode; // Economic Operator Registration and Identification Code
-
-    private Address address;
-
-    private Address permanentEstablishmentAddress;
-
-    private TransfereeDelegate delegate;
-
 }
