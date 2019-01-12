@@ -1,9 +1,15 @@
 package com.github.gilbertotcc.invoicing.fatturapa.model;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 import lombok.Value;
 
-@Value(staticConstructor = "contact")
-public class Contact {
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class Contact {
 
     public enum Type {
         PHONE,
@@ -12,23 +18,45 @@ public class Contact {
         CERTIFIED_EMAIL
     }
 
-    private Type type;
+    @NonNull
+    private final Type type;
 
-    private String value;
+    @NonNull
+    private final String value;
 
-    public static Contact phone(final String phoneNumber) {
-        return new Contact(Type.PHONE, phoneNumber);
+    @Value
+    @EqualsAndHashCode(callSuper = true)
+    public static class Phone extends Contact {
+
+        public Phone(final String number) {
+            super(Type.PHONE, number);
+        }
     }
 
-    public static Contact fax(final String faxNumber) {
-        return new Contact(Type.FAX, faxNumber);
+    @Value
+    @EqualsAndHashCode(callSuper = true)
+    public static class Fax extends Contact {
+
+        public Fax(final String number) {
+            super(Type.FAX, number);
+        }
     }
 
-    public static Contact email(final String email) {
-        return new Contact(Type.EMAIL, email);
+    @Value
+    @EqualsAndHashCode(callSuper = true)
+    public static class Email extends Contact {
+
+        public Email(final String email) {
+            super(Type.EMAIL, email);
+        }
     }
 
-    public static Contact certifiedEmail(final String certifiedEmail) {
-        return new Contact(Type.CERTIFIED_EMAIL, certifiedEmail);
+    @Value
+    @EqualsAndHashCode(callSuper = true)
+    public static class CertifiedEmail extends Contact {
+
+        public CertifiedEmail(final String email) {
+            super(Type.CERTIFIED_EMAIL, email);
+        }
     }
 }
