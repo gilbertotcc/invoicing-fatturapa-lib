@@ -34,12 +34,12 @@ public class FatturaElettronicaTypeToInvoiceConverter implements Converter<Fattu
         Optional.ofNullable(datiTrasmissioneType.getContattiTrasmittente())
                 .ifPresent(contattiTrasmittenteType -> {
                     Optional.ofNullable(contattiTrasmittenteType.getTelefono())
-                            .ifPresent(phone -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.PHONE, phone)));
+                            .ifPresent(phone -> transmissionDataBuilder.senderContact(new Contact.Phone(phone)));
                     Optional.ofNullable(contattiTrasmittenteType.getEmail())
-                            .ifPresent(email -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.EMAIL, email)));
+                            .ifPresent(email -> transmissionDataBuilder.senderContact(new Contact.Email(email)));
                 });
         Optional.ofNullable(datiTrasmissioneType.getPECDestinatario())
-                .ifPresent(email -> transmissionDataBuilder.senderContact(Contact.contact(Contact.Type.CERTIFIED_EMAIL, email)));
+                .ifPresent(email -> transmissionDataBuilder.senderContact(new Contact.CertifiedEmail(email)));
 
         return Invoice.builder()
                 .transmissionData(transmissionDataBuilder.build())

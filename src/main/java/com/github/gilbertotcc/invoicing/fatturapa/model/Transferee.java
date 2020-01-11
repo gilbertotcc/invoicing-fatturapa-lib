@@ -4,18 +4,20 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
-public class Transferee {
+public class Transferee extends AbstractBasicSubject {
 
-    private UserFiscalId userFiscalId;
+    @Value
+    public static class Delegate extends AbstractBasicSubject {
 
-    private String fiscalCode;
-
-    private String businessName;
-
-    private String firstName;
-
-    private String lastName;
+        @Builder
+        private Delegate(final UserFiscalId userFiscalId,
+                         final String fiscalCode,
+                         final String businessName,
+                         final String firstName,
+                         final String lastName) {
+            super(userFiscalId, fiscalCode, businessName, firstName, lastName);
+        }
+    }
 
     private String salutation;
 
@@ -25,6 +27,24 @@ public class Transferee {
 
     private Address permanentEstablishmentAddress;
 
-    private TransfereeDelegate delegate;
+    private Delegate delegate;
 
+    @Builder
+    private Transferee(final UserFiscalId userFiscalId,
+                       final String fiscalCode,
+                       final String businessName,
+                       final String firstName,
+                       final String lastName,
+                       final String salutation,
+                       final String eoriCode,
+                       final Address address,
+                       final Address permanentEstablishmentAddress,
+                       final Delegate delegate) {
+        super(userFiscalId, fiscalCode, businessName, firstName, lastName);
+        this.salutation = salutation;
+        this.eoriCode = eoriCode;
+        this.address = address;
+        this.permanentEstablishmentAddress = permanentEstablishmentAddress;
+        this.delegate = delegate;
+    }
 }
